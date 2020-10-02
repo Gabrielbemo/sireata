@@ -14,8 +14,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import br.edu.utfpr.dv.sireata.bo.AtaBO;
+import br.edu.utfpr.dv.sireata.builders.AtaJsonBuilder;
 import br.edu.utfpr.dv.sireata.model.Ata;
 import br.edu.utfpr.dv.sireata.model.Ata.TipoAta;
+import br.edu.utfpr.dv.sireata.model.AtaJson;
 import br.edu.utfpr.dv.sireata.util.DateUtils;
 
 @Path("/ata")
@@ -30,12 +32,12 @@ public class AtaService {
 			List<AtaJson> ret = new ArrayList<AtaJson>();
 			
 			for(Ata a : list) {
-				AtaJson ata = new AtaJson();
-				
-				ata.setTipo(a.getTipo());
-				ata.setNumero(a.getNumero());
-				ata.setAno(DateUtils.getYear(a.getData()));
-				ata.setData(DateUtils.format(a.getData(), "dd/MM/yyyy"));
+				AtaJson ata = new AtaJsonBuilder()
+						.withType(a.getTipo())
+						.withNumber(a.getNumero())
+						.withYear(a.getData())
+						.withDate(a.getData())
+						.constroi();
 				
 				ret.add(ata);
 			}
@@ -66,46 +68,4 @@ public class AtaService {
 			return Response.status(Status.INTERNAL_SERVER_ERROR.ordinal(), e.getMessage()).build();
 		}
 	}
-	
-	public class AtaJson {
-		
-		private TipoAta tipo;
-		private int numero;
-		private int ano;
-		private String data;
-		
-		public AtaJson() {
-			this.setTipo(TipoAta.ORDINARIA);
-			this.setNumero(0);
-			this.setAno(0);
-			this.setData("");
-		}
-		
-		public TipoAta getTipo() {
-			return tipo;
-		}
-		public void setTipo(TipoAta tipo) {
-			this.tipo = tipo;
-		}
-		public int getNumero() {
-			return numero;
-		}
-		public void setNumero(int numero) {
-			this.numero = numero;
-		}
-		public int getAno() {
-			return ano;
-		}
-		public void setAno(int ano) {
-			this.ano = ano;
-		}
-		public String getData() {
-			return data;
-		}
-		public void setData(String data) {
-			this.data = data;
-		}
-		
-	}
-
 }
